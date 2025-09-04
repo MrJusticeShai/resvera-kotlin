@@ -19,12 +19,12 @@ src
                 ├── service # Order book logic
                 ├── api # REST API (routes, DTOs)
                 └── Application.kt # Entry point
-    └── test
-        └── kotlin
-            └── com
-                └── resvara
-                    ├── service # Unit tests for order book logic
-                    └── api # Unit tests for REST API
+└── test
+    └── kotlin
+        └── com
+            └── resvara
+                ├── service # Unit tests for order book logic
+                └── api # Unit tests for REST API
 ```
 
 
