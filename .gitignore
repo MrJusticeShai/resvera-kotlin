@@ -1,0 +1,23 @@
+# Gradle
+.gradle/
+build/
+out/
+
+# IntelliJ / IDEA
+.idea/
+*.iml
+
+# OS files
+.DS_Store
+
+# Logs
+*.log
+
+# Kotlin/Java
+*.class
+*.jar
+*.war
+*.ear
+
+# Local env
+.env
