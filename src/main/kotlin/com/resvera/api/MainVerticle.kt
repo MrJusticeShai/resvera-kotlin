@@ -109,7 +109,7 @@ class MainVerticle : CoroutineVerticle() {
         // --- Start HTTP server ---
         vertx.createHttpServer()
             .requestHandler(router)
-            .listen(8080)
+            .listen(8080, "0.0.0.0")
             .onSuccess { server ->
                 println("HTTP server started on port ${server.actualPort()}")
             }
