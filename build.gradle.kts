@@ -28,7 +28,7 @@ dependencies {
 }
 
 application {
-    mainClass.set("com.resvara.ApplicationKt")
+    mainClass.set("com.resvera.ApplicationKt")
 }
 
 
