@@ -1,4 +1,4 @@
-# In-Memory Order Book (Kotlin + Vert.x)
+# resvera - an In-Memory Order Book (Kotlin + Vert.x)
 
 This project implements a simplified **in-memory order book** with order matching, using **Kotlin** and **Vert.x**.  
 It exposes REST APIs for submitting limit orders, retrieving order books, and viewing recent trades.  
