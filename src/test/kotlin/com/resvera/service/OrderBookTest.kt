@@ -1,8 +1,7 @@
-package com.resvera
+package com.resvera.service
 
 import com.resvera.model.Order
 import com.resvera.model.OrderSide
-import com.resvera.service.OrderBook
 import java.math.BigDecimal
 import kotlin.test.Test
 import kotlin.test.assertEquals

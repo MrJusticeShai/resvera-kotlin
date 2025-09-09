@@ -3,6 +3,18 @@ plugins {
     application
 }
 
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
+    }
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    kotlinOptions {
+        jvmTarget = "21"
+    }
+}
+
 group = "com.resvara"
 version = "1.0-SNAPSHOT"
 
@@ -25,6 +37,7 @@ dependencies {
     // Testing dependencies
     testImplementation("org.jetbrains.kotlin:kotlin-test:1.9.23")
     testImplementation("io.vertx:vertx-junit5:4.5.7")
+    testImplementation("io.vertx:vertx-web-client:4.5.7")
 }
 
 application {

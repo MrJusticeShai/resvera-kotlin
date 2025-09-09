@@ -15,33 +15,22 @@ import io.vertx.ext.web.handler.JWTAuthHandler
 import io.vertx.kotlin.coroutines.CoroutineVerticle
 import kotlin.jvm.java
 
-/**
- * MainVerticle sets up the HTTP server with routes for:
- * - JWT authentication
- * - Order book retrieval
- * - Submitting limit orders
- * - Recent trades
- */
 class MainVerticle : CoroutineVerticle() {
 
     private val mapper: ObjectMapper = ObjectMapper().registerModule(KotlinModule.Builder().build())
     private lateinit var jwtAuth: JWTAuth
 
-    // Single in-memory order book instance
     private val orderBook = OrderBook()
 
     override suspend fun start() {
         val router = Router.router(vertx)
 
-        // --- JWT Auth setup ---
         val secret = System.getenv("JWT_SECRET") ?: "my-secret-key"
         val jwtOptions = JWTAuthOptions(JsonObject().put("secret", secret))
         jwtAuth = JWTAuth.create(vertx, jwtOptions)
 
-        // --- Body parser for POST requests ---
         router.post().handler(BodyHandler.create())
 
-        // --- Login endpoint ---
         router.post("/auth/login").handler { ctx ->
             try {
                 val body = ctx.body().asJsonObject()
@@ -61,10 +50,8 @@ class MainVerticle : CoroutineVerticle() {
             }
         }
 
-        // --- JWT Auth Handler for protected routes ---
         val jwtHandler = JWTAuthHandler.create(jwtAuth)
 
-        // --- Get order book ---
         router.get("/:currencyPair/orderbook")
             .handler(jwtHandler)
             .handler { ctx ->
@@ -74,7 +61,6 @@ class MainVerticle : CoroutineVerticle() {
                     .end(Json.encodePrettily(snapshot))
             }
 
-        // --- Submit limit order ---
         router.post("/v1/orders/limit")
             .handler(jwtHandler)
             .handler { ctx ->
@@ -96,7 +82,6 @@ class MainVerticle : CoroutineVerticle() {
                 }
             }
 
-        // --- Get recent trades ---
         router.get("/:currencyPair/tradehistory")
             .handler(jwtHandler)
             .handler { ctx ->
@@ -106,7 +91,6 @@ class MainVerticle : CoroutineVerticle() {
                     .end(Json.encodePrettily(trades))
             }
 
-        // --- Start HTTP server ---
         vertx.createHttpServer()
             .requestHandler(router)
             .listen(8080, "0.0.0.0")

@@ -1,7 +1,7 @@
 # resvera - an In-Memory Order Book (Kotlin + Vert.x)
 
-This project implements a simplified **in-memory order book** with order matching, using **Kotlin** and **Vert.x**.  
-It exposes REST APIs for submitting limit orders, retrieving order books, and viewing recent trades.  
+This project implements a simplified **in-memory order book** with order matching, using **Kotlin** and **Vert.x**.
+It exposes REST APIs for submitting limit orders, retrieving order books, and viewing recent trades.
 JWT authentication is supported.
 
 ---
@@ -14,7 +14,7 @@ src
 └── main
     └── kotlin
         └── com
-            └── resvara
+            └── resvera
                 ├── model # Data models (Order, Trade, enums)
                 ├── service # Order book logic
                 ├── api # REST API (routes, DTOs)
@@ -22,32 +22,41 @@ src
 └── test
     └── kotlin
         └── com
-            └── resvara
-                ├── service # Unit tests for order book logic
-                └── api # Unit tests for REST API
+            └── resvera
+                └── service # Unit tests for order book logic
 ```
 
 
 ---
 
 ## 🚀 Running the Application
-
+### Local
 1. Clone this repo.
 2. Run with Gradle:
-
 ```bash
 ./gradlew run
 ```
-
 The HTTP server will start on http://localhost:8080.
 
-🔑 Authentication
+## ▶️ Running the App in GitHub Codespaces
+1. Open Codespaces for this repository. GitHub will provision a containerized dev environment.
+2. Run with gradle:
 
-Before calling protected endpoints, request a JWT:
 ```
-curl -X POST http://localhost:8080/auth/login \
--H "Content-Type: application/json" \
--d '{"username":"test","password":"password"}'
+./gradlew run
+```
+
+3. Forward port 8080:
+- In the Codespaces menu, go to Ports → Forward Port
+- Add port 8080
+- Choose Public if you want us to access it directly, or Private if only you will test.
+Access the API using the forwarded URL:
+
+🔑 Authentication
+```
+curl -X POST https://<codespaces-url>/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"test","password":"password"}'
 ```
 
 Response:
@@ -69,7 +78,7 @@ Use the token in subsequent requests:
 Example:
 ```
 curl -H "Authorization: Bearer <token>" \
-http://localhost:8080/BTCZAR/orderbook
+http://<codespaces-url>/BTCZAR/orderbook
 ```
 Response:
 ```
@@ -133,7 +142,7 @@ If unmatched, order is stored in the order book.
 Example:
 ```
 curl -H "Authorization: Bearer <token>" \
-http://localhost:8080/BTCZAR/tradehistory
+http://<codespaces-url>/BTCZAR/tradehistory
 ```
 
 

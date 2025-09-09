@@ -1,6 +1,5 @@
 package com.resvera.service
 
-
 import com.resvera.model.Order
 import com.resvera.model.OrderBookSnapshot
 import com.resvera.model.OrderSide
@@ -8,41 +7,23 @@ import com.resvera.model.Trade
 import java.math.BigDecimal
 import java.util.TreeMap
 
-/**
- * Simple in-memory order book with price-time priority matching.
- * Not thread-safe (per brief requirements).
- */
 class OrderBook {
 
-    // TreeMaps: price -> FIFO list of orders
     private val bids: MutableMap<String, TreeMap<BigDecimal, MutableList<Order>>> = mutableMapOf()
     private val asks: MutableMap<String, TreeMap<BigDecimal, MutableList<Order>>> = mutableMapOf()
 
-    // Recent trades log (max 100 per currency pair)
     private val recentTrades: MutableMap<String, MutableList<Trade>> = mutableMapOf()
     private val maxTrades = 100
 
-    // --- Public API ---
-
-    /**
-     * Get a snapshot of the current order book.
-     */
     fun getOrderBookSnapshot(currencyPair: String): OrderBookSnapshot {
         val sortedBids = bids[currencyPair]?.values?.flatten()?.sortedByDescending { it.price } ?: emptyList()
         val sortedAsks = asks[currencyPair]?.values?.flatten()?.sortedBy { it.price } ?: emptyList()
         return OrderBookSnapshot(asks = sortedAsks, bids = sortedBids)
     }
 
-    /**
-     * Get recent trades for a currency pair.
-     */
     fun getRecentTrades(currencyPair: String): List<Trade> =
         recentTrades[currencyPair]?.toList() ?: emptyList()
 
-    /**
-     * Submit a limit order and match against the order book.
-     * Returns a list of executed trades.
-     */
     fun submitLimitOrder(newOrder: Order): List<Trade> {
         val trades = mutableListOf<Trade>()
         var remaining = newOrder.quantity
@@ -60,16 +41,10 @@ class OrderBook {
             if (remaining > BigDecimal.ZERO) addOrder(bookAsks, newOrder.copy(quantity = remaining))
         }
 
-        // Trim trade log
         while (tradeLog.size > maxTrades) tradeLog.removeLast()
         return trades
     }
 
-    // --- Private helpers ---
-
-    /**
-     * Matches incoming order against opposite side orders.
-     */
     private fun matchOrders(
         order: Order,
         quantity: BigDecimal,
@@ -114,9 +89,6 @@ class OrderBook {
         return remaining
     }
 
-    /**
-     * Adds a resting order to the order book (FIFO by price level).
-     */
     private fun addOrder(book: TreeMap<BigDecimal, MutableList<Order>>, order: Order) {
         book.getOrPut(order.price) { mutableListOf() }.add(order)
     }
